@@ -1,0 +1,58 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bcc_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyvalue_storage */
+  $keyvalue_storage = \Drupal::service('keyvalue')->get('bcc');
+
+  $form['site_information']['bcc'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Blind carbon copy'),
+  ];
+
+  $form['site_information']['bcc']['bcc_mail_address'] = [
+    '#type' => 'email',
+    '#title' => t('Blind carbon email'),
+    '#description' => t('Enter the e-mail address that should receive copies of all site e-mails.'),
+    '#default_value' => $keyvalue_storage->get('bcc_mail_address'),
+  ];
+
+  $form['#submit'][] = 'bcc_form_system_site_information_settings_submit';
+}
+
+/**
+ * Submission handler for "system_site_information_settings" form.
+ *
+ * Saves blind carbon copy address in key/value storage.
+ *
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function bcc_form_system_site_information_settings_submit($form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyvalue_storage */
+  $keyvalue_storage = \Drupal::service('keyvalue')->get('bcc');
+  $keyvalue_storage->set('bcc_mail_address', $form_state->getValue('bcc_mail_address'));
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Sends a blind carbon copy to all outgoing emails.
+ */
+function bcc_mail_alter(&$message) {
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyvalue_storage */
+  $keyvalue_storage = \Drupal::service('keyvalue')->get('bcc');
+
+  if ($bcc_mail_address = $keyvalue_storage->get('bcc_mail_address', NULL)) {
+    $existing_bcc = isset($message['headers']['Bcc']) ? $message['headers']['Bcc'] : '';
+
+    $message['headers']['Bcc'] = implode(' ', array_merge(
+      explode(' ', $existing_bcc),
+      [$bcc_mail_address]
+    ));
+  }
+}
