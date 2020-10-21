@@ -1,0 +1,7 @@
+bcc.settings:
+  path: '/admin/config/system/bcc-settings'
+  defaults:
+    _form: \Drupal\bcc\Form\BccSettingsForm
+    _title: 'Blind Carbon Copy Settings'
+  requirements:
+    _permission: 'administer bcc settings'
