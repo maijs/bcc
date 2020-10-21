@@ -1,0 +1,4 @@
+administer bcc settings:
+  title: 'Administer BCC settings'
+  description: 'Configure the BCC email address for the website.'
+  restrict access: true
