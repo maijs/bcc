@@ -3,9 +3,7 @@
 namespace Drupal\bcc\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure user settings for this site.
@@ -13,26 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class BccSettingsForm extends ConfigFormBase {
-
-  /**
-   * Constructs a \Drupal\user\AccountSettingsForm object.
-   *
-   * @param ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
-   *   The role storage.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    parent::__construct($config_factory);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -61,7 +39,7 @@ class BccSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable'),
       '#description' => $this->t('If checked, all system emails will be sent with the BCC address.'),
-      '#return_value' => true,
+      '#return_value' => TRUE,
       '#default_value' => $bcc_config->get('enable'),
     ];
 

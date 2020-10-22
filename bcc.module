@@ -1,9 +1,19 @@
 <?php
 
-use Drupal\Core\Config\ConfigFactoryInterface;
+/**
+ * @file Adds a BCC address to all e-mails sent by the website.
+ */
 
-function bcc_mail_alter(&$message) {
-  /** @var ConfigFactoryInterface $config */
+/**
+ * Add Bcc from settings into all outgoing email.
+ *
+ * @param array $message
+ *   An array containing the message data.
+ *
+ * @see hook_mail_alter()
+ */
+function bcc_mail_alter(array &$message) {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config */
   $config = \Drupal::service('config.factory');
   $bcc_config = $config->get('bcc.settings');
 
