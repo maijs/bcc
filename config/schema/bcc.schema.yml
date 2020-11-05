@@ -1,0 +1,10 @@
+bcc.settings:
+  type: config_object
+  label: 'Blind Carbon Copy Settings'
+  mapping:
+    enable:
+      label: 'Enable'
+      type: boolean
+    bcc_mail:
+      label: 'BCC email address'
+      type: email
